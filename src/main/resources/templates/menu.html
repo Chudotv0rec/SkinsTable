@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skins TT — Выбор кошелька</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --text: #0a1a33;
+            --text-soft: #56688a;
+            --brand: #0b2a5c;
+            --brand-2: #1e4d9c;
+            --accent: #3b8dff;
+            --accent-soft: rgba(59, 141, 255, 0.15);
+
+            /* Liquid glass tokens */
+            --glass-bg: rgba(240, 247, 255, 0.55);
+            --glass-bg-strong: rgba(245, 250, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow:
+                    0 1px 1px rgba(255, 255, 255, 0.85) inset,
+                    0 -1px 1px rgba(255, 255, 255, 0.4) inset,
+                    0 20px 40px -12px rgba(11, 42, 92, 0.22),
+                    0 8px 20px -8px rgba(11, 42, 92, 0.14);
+            --glass-shadow-hover:
+                    0 1px 1px rgba(255, 255, 255, 0.95) inset,
+                    0 -1px 1px rgba(255, 255, 255, 0.5) inset,
+                    0 34px 66px -16px rgba(11, 42, 92, 0.32),
+                    0 14px 30px -10px rgba(11, 42, 92, 0.2);
+        }
+
+        html, body {
+            min-height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            padding: 40px 20px 60px;
+            position: relative;
+            overflow-x: hidden;
+            background: #e8eff9;
+            min-height: 100vh;
+        }
+
+        /* ============ СИНИЙ ЖИВОЙ ФОН ============ */
+        .bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            background:
+                    radial-gradient(1200px 800px at 15% 10%, #cddffb 0%, transparent 60%),
+                    radial-gradient(1000px 700px at 85% 20%, #b9d2f7 0%, transparent 55%),
+                    radial-gradient(900px 900px at 50% 100%, #a7c4ee 0%, transparent 60%),
+                    linear-gradient(180deg, #ecf3fc 0%, #dbe7f8 100%);
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.8;
+            animation: float 18s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        .blob-1 {
+            width: 560px; height: 560px;
+            background: radial-gradient(circle at 30% 30%, #6aa8ff, #2a5fd6 60%, transparent 75%);
+            top: -160px; left: -140px;
+        }
+
+        .blob-2 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle at 60% 40%, #4f7fe8, #1b3f9e 60%, transparent 78%);
+            top: 15%; right: -200px;
+            animation-delay: -4s;
+            opacity: 0.7;
+        }
+
+        .blob-3 {
+            width: 520px; height: 520px;
+            background: radial-gradient(circle at 50% 50%, #8bb8ff, #3b6fd6 60%, transparent 78%);
+            bottom: -180px; left: 25%;
+            animation-delay: -8s;
+        }
+
+        .blob-4 {
+            width: 420px; height: 420px;
+            background: radial-gradient(circle at 40% 60%, #5cc3ff, #0a6bd6 60%, transparent 78%);
+            top: 50%; left: 0%;
+            opacity: 0.6;
+            animation-delay: -12s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33%      { transform: translate(40px, -30px) scale(1.08); }
+            66%      { transform: translate(-30px, 25px) scale(0.96); }
+        }
+
+        /* ============ CONTAINER ============ */
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ============ HEADER (glass bar) ============ */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding: 14px 22px;
+            border-radius: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 19px;
+            color: var(--brand);
+            letter-spacing: -0.02em;
+        }
+
+        .logo-mark {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #0a2a5c 0%, #1e4d9c 55%, #3b8dff 100%);
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: -0.03em;
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.4) inset,
+                    0 8px 20px -6px rgba(30, 77, 156, 0.6);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 8px;
+            font-size: 13.5px;
+        }
+
+        .header-nav span {
+            padding: 8px 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            color: var(--text-soft);
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        .header-nav span:hover {
+            background: rgba(255, 255, 255, 0.85);
+            color: var(--brand);
+        }
+
+        /* ============ TITLE ROW ============ */
+        .title-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .page-title {
+            flex: 1;
+            min-width: 260px;
+            padding: 0 4px;
+        }
+
+        .page-title h1 {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            margin-bottom: 10px;
+            background: linear-gradient(120deg, #0a1a33 15%, #2a5fd6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .page-title p {
+            font-size: 15.5px;
+            color: var(--text-soft);
+            max-width: 580px;
+            line-height: 1.5;
+        }
+
+        /* ============ CREATE BUTTON ============ */
+        .create-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 22px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: #fff;
+            background: linear-gradient(135deg, #1e4d9c 0%, #2a5fd6 50%, #3b8dff 100%);
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.35) inset,
+                    0 -1px 0 rgba(0,0,0,0.15) inset,
+                    0 12px 26px -10px rgba(30, 77, 156, 0.7),
+                    0 6px 14px -6px rgba(11, 42, 92, 0.4);
+
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+        }
+
+        .create-btn::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.45) 0%,
+                    rgba(255, 255, 255, 0.1) 45%,
+                    transparent 100%
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .create-btn > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .create-btn .plus {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            display: grid;
+            place-items: center;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1;
+            backdrop-filter: blur(6px);
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+        }
+
+        .create-btn:hover {
+            transform: translateY(-3px);
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.45) inset,
+                    0 -1px 0 rgba(0,0,0,0.15) inset,
+                    0 20px 40px -12px rgba(30, 77, 156, 0.8),
+                    0 10px 22px -8px rgba(11, 42, 92, 0.5);
+        }
+
+        .create-btn:hover .plus {
+            transform: rotate(90deg) scale(1.08);
+        }
+
+        .create-btn:active {
+            transform: translateY(-1px) scale(0.99);
+            transition-duration: 0.12s;
+        }
+
+        /* ============ WALLET GRID ============ */
+        .wallet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 22px;
+        }
+
+        /* ============ LIQUID GLASS CARD ============ */
+        .wallet-card {
+            position: relative;
+            border-radius: 24px;
+            padding: 26px;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+
+            background: var(--glass-bg);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+
+            transition:
+                    transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1),
+                    box-shadow 0.35s ease,
+                    background 0.3s ease,
+                    border-color 0.3s ease;
+
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .wallet-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 55%;
+            background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.7) 0%,
+                    rgba(255, 255, 255, 0.15) 45%,
+                    transparent 100%
+            );
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .wallet-card::after {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: 25px;
+            background: linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.95) 0%,
+                    rgba(59, 141, 255, 0) 40%,
+                    rgba(59, 141, 255, 0) 60%,
+                    rgba(255, 255, 255, 0.6) 100%
+            );
+            padding: 1px;
+            -webkit-mask:
+                    linear-gradient(#fff 0 0) content-box,
+                    linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0.9;
+            z-index: 0;
+        }
+
+        .wallet-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .wallet-card:hover {
+            transform: translateY(-6px) scale(1.012);
+            background: var(--glass-bg-strong);
+            box-shadow: var(--glass-shadow-hover);
+            border-color: rgba(255, 255, 255, 0.98);
+        }
+
+        .wallet-card:active {
+            transform: translateY(-2px) scale(1.005);
+            transition-duration: 0.12s;
+        }
+
+        .go-arrow {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            color: var(--brand-2);
+            font-size: 16px;
+            font-weight: 700;
+            backdrop-filter: blur(10px);
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.9) inset,
+                    0 4px 12px -4px rgba(11, 42, 92, 0.25);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+            z-index: 3;
+        }
+
+        .wallet-card:hover .go-arrow {
+            background: linear-gradient(135deg, #1e4d9c, #3b8dff);
+            color: #fff;
+            border-color: rgba(255,255,255,0.7);
+            transform: translate(3px, -3px) scale(1.05);
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.35) inset,
+                    0 10px 22px -6px rgba(30, 77, 156, 0.7);
+        }
+
+        /* ============ WALLET HEAD ============ */
+        .wallet-head {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .wallet-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.9) inset,
+                    0 6px 14px -6px rgba(11, 42, 92, 0.28);
+        }
+
+        .icon-1 { color: #1e4d9c; }
+        .icon-2 { color: #0a6bd6; }
+        .icon-3 { color: #3b8dff; }
+        .icon-4 { color: #0b2a5c; }
+
+        .wallet-meta {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .wallet-name {
+            font-size: 15.5px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--text);
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .wallet-type {
+            font-size: 12.5px;
+            color: var(--text-soft);
+            font-weight: 500;
+        }
+
+        /* ============ BALANCE BLOCK ============ */
+        .wallet-balance-block {
+            margin-top: 20px;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 16px;
+            backdrop-filter: blur(14px) saturate(160%);
+            -webkit-backdrop-filter: blur(14px) saturate(160%);
+            box-shadow:
+                    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+                    0 4px 12px -6px rgba(11, 42, 92, 0.15);
+        }
+
+        .balance-label {
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-soft);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .balance-value {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--brand);
+            line-height: 1.1;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .balance-value .currency {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-soft);
+        }
+
+        /* ============ FOOTER ============ */
+        .wallet-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(11, 42, 92, 0.1);
+            font-size: 12.5px;
+        }
+
+        .wallet-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            color: var(--brand-2);
+        }
+
+        .wallet-status::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        /* ============ HINT ============ */
+        .hint {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-soft);
+            margin-top: 30px;
+            font-weight: 500;
+        }
+
+        /* ============ STATES (loading / empty / error) ============ */
+        .state-msg {
+            text-align: center;
+            padding: 60px 20px;
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            color: var(--text-soft);
+            font-size: 15px;
+            font-weight: 500;
+            grid-column: 1 / -1;
+        }
+
+        .state-msg .spinner {
+            width: 34px;
+            height: 34px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            border: 3px solid rgba(59, 141, 255, 0.2);
+            border-top-color: #3b8dff;
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============ АДАПТИВ ============ */
+        @media (max-width: 640px) {
+            body { padding: 24px 14px 40px; }
+            .page-title h1 { font-size: 28px; }
+            .balance-value { font-size: 24px; }
+            .wallet-card { padding: 22px; border-radius: 20px; }
+            .title-row { align-items: stretch; }
+            .create-btn { width: 100%; justify-content: center; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .blob { animation: none; }
+            * { transition: none !important; }
+        }
+    </style>
+</head>
+<body>
+<!-- Синий живой фон для эффекта стекла -->
+<div class="bg-canvas">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+</div>
+
+<div class="container">
+    <!-- Header -->
+    <header class="page-header">
+        <div class="logo">
+            <div class="logo-mark">ST</div>
+            Skins TT
+        </div>
+        <nav class="header-nav">
+            <span>Dashboard</span>
+            <span>Wallet</span>
+            <span>Support</span>
+        </nav>
+    </header>
+
+    <!-- Title + Create button -->
+    <div class="title-row">
+        <div class="page-title">
+            <h1>Выберите кошелёк</h1>
+            <p>Нажмите на кошелёк, чтобы перейти к нему. Все балансы обновляются в реальном времени.</p>
+        </div>
+        <button class="create-btn" id="createWalletBtn" type="button">
+            <span class="plus">+</span>
+            <span>Создать кошелёк</span>
+        </button>
+    </div>
+
+    <!-- Wallet grid -->
+    <div class="wallet-grid" id="walletGrid">
+        <div class="state-msg">
+            <div class="spinner"></div>
+            Загружаем кошельки...
+        </div>
+    </div>
+
+    <p class="hint">Нажмите на карточку кошелька, чтобы перейти к нему.</p>
+</div>
+
+<script>
+    /* ============================================================
+       Параллакс blob'ов (без изменений)
+       ============================================================ */
+    const blobs = document.querySelectorAll('.blob');
+    let mx = 0, my = 0;
+    let cx = 0, cy = 0;
+
+    window.addEventListener('mousemove', (e) => {
+        mx = (e.clientX / window.innerWidth - 0.5) * 2;
+        my = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+
+    function animateBlobs() {
+        cx += (mx - cx) * 0.05;
+        cy += (my - cy) * 0.05;
+        blobs.forEach((b, i) => {
+            const depth = (i + 1) * 6;
+            b.style.marginLeft = `${cx * depth}px`;
+            b.style.marginTop = `${cy * depth}px`;
+        });
+        requestAnimationFrame(animateBlobs);
+    }
+    animateBlobs();
+
+    /* ============================================================
+       API: получение кошельков
+       ============================================================ */
+    const API_URL = 'http://localhost:8080/wallet/get/all';
+    const walletGrid = document.getElementById('walletGrid');
+
+    // Набор иконок и цветовых классов для разнообразия карточек
+    const ICONS = ['💼', '💰', '🎁', '🏦', '💳', '🪙', '📈', '🔐'];
+    const ICON_CLASSES = ['icon-1', 'icon-2', 'icon-3', 'icon-4'];
+
+    // Формат суммы: 1200.45 -> "1,200.45"
+    function formatAmount(value) {
+        const num = Number(value);
+        if (!isFinite(num)) return '0.00';
+        return num.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    // Безопасное создание текста (защита от XSS при вставке из API)
+    function escapeHtml(str) {
+        return String(str ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    // Сборка одной карточки из объекта кошелька
+    function buildCard(wallet, index) {
+        const name = wallet?.walletName ?? 'Без названия';
+        const description = wallet?.walletDescription ?? '';
+        const amount = formatAmount(wallet?.walletTotalAmount);
+
+        const icon = ICONS[index % ICONS.length];
+        const iconClass = ICON_CLASSES[index % ICON_CLASSES.length];
+
+        const card = document.createElement('a');
+        card.className = 'wallet-card';
+        card.href = `/view/wallet/${wallet.id}`;   // <-- сразу правильный href
+        card.dataset.name = name;
+        card.dataset.wallet = JSON.stringify(wallet);
+
+        card.innerHTML = `
+    <div class="go-arrow">→</div>
+    <div class="wallet-head">
+      <div class="wallet-icon ${iconClass}">${icon}</div>
+      <div class="wallet-meta">
+        <div class="wallet-name">${escapeHtml(name)}</div>
+        <div class="wallet-type">${escapeHtml(description)}</div>
+      </div>
+    </div>
+    <div class="wallet-balance-block">
+      <div class="balance-label">Доступный баланс</div>
+      <div class="balance-value">$${amount} <span class="currency">USD</span></div>
+    </div>
+    <div class="wallet-footer">
+      <span class="wallet-status">Активен</span>
+    </div>
+  `;
+
+        // Переход по клику
+        card.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = `/view/wallet/${wallet.id}`; // <-- переход на ручку
+        });
+
+        return card;
+    }
+
+    // Показать состояние (загрузка / ошибка / пусто)
+    function showState(type, message) {
+        walletGrid.innerHTML = '';
+        const box = document.createElement('div');
+        box.className = 'state-msg';
+
+        if (type === 'loading') {
+            box.innerHTML = `<div class="spinner"></div>${escapeHtml(message)}`;
+        } else {
+            box.textContent = message;
+        }
+
+        walletGrid.appendChild(box);
+    }
+
+    // Загрузка списка кошельков
+    async function loadWallets() {
+        showState('loading', 'Загружаем кошельки...');
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (!Array.isArray(data)) {
+                throw new Error('Ожидался массив кошельков');
+            }
+
+            if (data.length === 0) {
+                showState('empty', 'У вас пока нет кошельков. Создайте первый!');
+                return;
+            }
+
+            walletGrid.innerHTML = '';
+            data.forEach((wallet, i) => {
+                walletGrid.appendChild(buildCard(wallet, i));
+            });
+
+        } catch (err) {
+            console.error('Ошибка загрузки кошельков:', err);
+            showState('error', `Не удалось загрузить кошельки: ${err.message}`);
+        }
+    }
+
+    /* ============================================================
+   Кнопка "Создать кошелёк" → переход на страницу создания
+   ============================================================ */
+    document.getElementById('createWalletBtn').addEventListener('click', () => {
+        window.location.href = '/view/wallet/create';
+    });
+
+    /* ============================================================
+       Старт
+       ============================================================ */
+    loadWallets();
+</script>
+</body>
+</html>

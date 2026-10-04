@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Skins TT — ' + ${wallet.walletName}">Skins TT — Кошелёк</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --text: #0a1a33;
+            --text-soft: #56688a;
+            --brand: #0b2a5c;
+            --brand-2: #1e4d9c;
+            --accent: #3b8dff;
+            --accent-soft: rgba(59, 141, 255, 0.15);
+
+            --glass-bg: rgba(240, 247, 255, 0.55);
+            --glass-bg-strong: rgba(245, 250, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow:
+                    0 1px 1px rgba(255, 255, 255, 0.85) inset,
+                    0 -1px 1px rgba(255, 255, 255, 0.4) inset,
+                    0 20px 40px -12px rgba(11, 42, 92, 0.22),
+                    0 8px 20px -8px rgba(11, 42, 92, 0.14);
+            --glass-shadow-hover:
+                    0 1px 1px rgba(255, 255, 255, 0.95) inset,
+                    0 -1px 1px rgba(255, 255, 255, 0.5) inset,
+                    0 34px 66px -16px rgba(11, 42, 92, 0.32),
+                    0 14px 30px -10px rgba(11, 42, 92, 0.2);
+        }
+
+        html, body { min-height: 100%; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            padding: 40px 20px 60px;
+            position: relative;
+            overflow-x: hidden;
+            background: #e8eff9;
+            min-height: 100vh;
+        }
+
+        /* ============ СИНИЙ ЖИВОЙ ФОН ============ */
+        .bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            background:
+                    radial-gradient(1200px 800px at 15% 10%, #cddffb 0%, transparent 60%),
+                    radial-gradient(1000px 700px at 85% 20%, #b9d2f7 0%, transparent 55%),
+                    radial-gradient(900px 900px at 50% 100%, #a7c4ee 0%, transparent 60%),
+                    linear-gradient(180deg, #ecf3fc 0%, #dbe7f8 100%);
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.8;
+            animation: float 18s ease-in-out infinite;
+            will-change: transform;
+        }
+        .blob-1 { width: 560px; height: 560px; background: radial-gradient(circle at 30% 30%, #6aa8ff, #2a5fd6 60%, transparent 75%); top: -160px; left: -140px; }
+        .blob-2 { width: 600px; height: 600px; background: radial-gradient(circle at 60% 40%, #4f7fe8, #1b3f9e 60%, transparent 78%); top: 15%; right: -200px; animation-delay: -4s; opacity: 0.7; }
+        .blob-3 { width: 520px; height: 520px; background: radial-gradient(circle at 50% 50%, #8bb8ff, #3b6fd6 60%, transparent 78%); bottom: -180px; left: 25%; animation-delay: -8s; }
+        .blob-4 { width: 420px; height: 420px; background: radial-gradient(circle at 40% 60%, #5cc3ff, #0a6bd6 60%, transparent 78%); top: 50%; left: 0%; opacity: 0.6; animation-delay: -12s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33%      { transform: translate(40px, -30px) scale(1.08); }
+            66%      { transform: translate(-30px, 25px) scale(0.96); }
+        }
+
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ============ HEADER ============ */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding: 14px 22px;
+            border-radius: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 19px;
+            color: var(--brand);
+            letter-spacing: -0.02em;
+            text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #0a2a5c 0%, #1e4d9c 55%, #3b8dff 100%);
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.4) inset,
+                    0 8px 20px -6px rgba(30, 77, 156, 0.6);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            color: var(--text-soft);
+            font-weight: 500;
+            font-size: 13.5px;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+        .back-link:hover { background: rgba(255, 255, 255, 0.85); color: var(--brand); }
+
+        /* ============ TITLE ============ */
+        .page-title {
+            margin-bottom: 28px;
+            padding: 0 4px;
+        }
+        .page-title h1 {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            margin-bottom: 8px;
+            background: linear-gradient(120deg, #0a1a33 15%, #2a5fd6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.15;
+        }
+        .page-title p {
+            font-size: 15px;
+            color: var(--text-soft);
+            line-height: 1.5;
+        }
+
+        /* ============ HERO CARD (баланс) ============ */
+        .hero-card {
+            position: relative;
+            border-radius: 28px;
+            padding: 36px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            overflow: hidden;
+            isolation: isolate;
+            margin-bottom: 22px;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 55%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.15) 45%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: 29px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(59, 141, 255, 0) 40%, rgba(59, 141, 255, 0) 60%, rgba(255, 255, 255, 0.6) 100%);
+            padding: 1px;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero-card > * { position: relative; z-index: 1; }
+
+        .hero-head {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 26px;
+        }
+
+        .hero-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            font-size: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.9) inset,
+                    0 8px 18px -6px rgba(11, 42, 92, 0.3);
+            color: var(--brand-2);
+        }
+
+        .hero-meta {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .hero-name {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: var(--text);
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+
+        .hero-desc {
+            font-size: 14.5px;
+            color: var(--text-soft);
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .hero-balance-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-soft);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .hero-balance {
+            font-size: 44px;
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            color: var(--brand);
+            line-height: 1.05;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .hero-balance .currency {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-soft);
+        }
+
+        /* ============ ДЕТАЛИ ============ */
+        .details-card {
+            position: relative;
+            border-radius: 24px;
+            padding: 26px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            overflow: hidden;
+            isolation: isolate;
+        }
+        .details-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 45%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .details-card > * { position: relative; z-index: 1; }
+
+        .details-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-soft);
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(11, 42, 92, 0.08);
+        }
+        .detail-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+        .detail-key {
+            font-size: 13.5px;
+            color: var(--text-soft);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            font-size: 14.5px;
+            color: var(--text);
+            font-weight: 600;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .detail-value.mono {
+            font-variant-numeric: tabular-nums;
+            font-weight: 700;
+            color: var(--brand-2);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: var(--accent-soft);
+            color: var(--brand-2);
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid rgba(59, 141, 255, 0.35);
+        }
+        .badge::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        /* ============ ACTIONS ============ */
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 26px;
+            flex-wrap: wrap;
+            padding: 16px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 22px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+        }
+
+        .btn-primary {
+            flex: 1;
+            min-width: 200px;
+            color: #fff;
+            background: linear-gradient(135deg, #1e4d9c 0%, #2a5fd6 50%, #3b8dff 100%);
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.35) inset,
+                    0 -1px 0 rgba(0,0,0,0.15) inset,
+                    0 12px 26px -10px rgba(30, 77, 156, 0.7),
+                    0 6px 14px -6px rgba(11, 42, 92, 0.4);
+        }
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.1) 45%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .btn-primary > * { position: relative; z-index: 1; }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.45) inset,
+                    0 -1px 0 rgba(0,0,0,0.15) inset,
+                    0 20px 40px -12px rgba(30, 77, 156, 0.8),
+                    0 10px 22px -8px rgba(11, 42, 92, 0.5);
+        }
+        .btn-primary:active { transform: translateY(-1px) scale(0.99); transition-duration: 0.12s; }
+
+        .btn-secondary {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.9) inset,
+                    0 4px 12px -6px rgba(11, 42, 92, 0.15);
+        }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.9); transform: translateY(-2px); }
+
+        .btn-danger {
+            color: #fff;
+            background: linear-gradient(135deg, #b3261e 0%, #d93025 55%, #ff5a4d 100%);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.35) inset,
+                    0 -1px 0 rgba(0,0,0,0.15) inset,
+                    0 12px 26px -10px rgba(179, 38, 30, 0.7),
+                    0 6px 14px -6px rgba(120, 20, 15, 0.4);
+        }
+        .btn-danger::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.08) 45%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .btn-danger > * { position: relative; z-index: 1; }
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow:
+                    0 1px 0 rgba(255,255,255,0.45) inset,
+                    0 -1px 0 rgba(0,0,0,0.15) inset,
+                    0 20px 40px -12px rgba(179, 38, 30, 0.8),
+                    0 10px 22px -8px rgba(120, 20, 15, 0.5);
+        }
+        .btn-danger:active { transform: translateY(-1px) scale(0.99); transition-duration: 0.12s; }
+        .btn-danger:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        /* ============ МОДАЛЬНОЕ ОКНО ============ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 26, 51, 0.45);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 100;
+            animation: fadeIn 0.2s ease;
+        }
+        .modal-overlay.open { display: flex; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal {
+            width: 100%;
+            max-width: 440px;
+            border-radius: 22px;
+            padding: 28px;
+            background: var(--glass-bg-strong);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow-hover);
+            position: relative;
+            isolation: isolate;
+            animation: pop 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
+        }
+        @keyframes pop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .modal-icon {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            display: grid; place-items: center;
+            font-size: 24px;
+            background: rgba(217, 48, 37, 0.12);
+            border: 1px solid rgba(217, 48, 37, 0.35);
+            color: #b3261e;
+            margin-bottom: 16px;
+        }
+
+        .modal h3 {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .modal p {
+            font-size: 14.5px;
+            color: var(--text-soft);
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+        .modal p strong { color: var(--text); font-weight: 700; }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .modal-actions .btn { padding: 12px 18px; font-size: 14px; }
+
+        .modal-error {
+            margin-top: 14px;
+            font-size: 13px;
+            color: #b3261e;
+            font-weight: 600;
+            display: none;
+        }
+        .modal-error.show { display: block; }
+
+        @media (max-width: 640px) {
+            body { padding: 24px 14px 40px; }
+            .page-title h1 { font-size: 26px; }
+            .hero-card { padding: 26px; border-radius: 22px; }
+            .hero-name { font-size: 21px; }
+            .hero-balance { font-size: 32px; }
+            .hero-icon { width: 54px; height: 54px; font-size: 26px; border-radius: 15px; }
+            .details-card { padding: 22px; border-radius: 20px; }
+            .actions { flex-direction: column; padding: 12px; }
+            .btn-primary { min-width: 100%; }
+            .btn-secondary { width: 100%; }
+            .btn-danger { width: 100%; }
+            .modal { padding: 22px; border-radius: 18px; }
+            .modal-actions { flex-direction: column-reverse; }
+            .modal-actions .btn { width: 100%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .blob { animation: none; }
+            * { transition: none !important; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-canvas">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+</div>
+
+<div class="container">
+    <!-- Header -->
+    <header class="page-header">
+        <a href="/view/menu" class="logo">
+            <div class="logo-mark">ST</div>
+            Skins TT
+        </a>
+        <a href="/view/menu" class="back-link">← К кошелькам</a>
+    </header>
+
+    <!-- Title -->
+    <div class="page-title">
+        <h1 th:text="${wallet.walletName}">Название кошелька</h1>
+        <p th:text="${wallet.walletDescription != null and !wallet.walletDescription.isEmpty() ? wallet.walletDescription : 'Без описания'}">Описание</p>
+    </div>
+
+    <!-- Hero: баланс -->
+    <div class="hero-card">
+        <div class="hero-head">
+            <div class="hero-icon">💼</div>
+            <div class="hero-meta">
+                <div class="hero-name" th:text="${wallet.walletName}">Кошелёк</div>
+                <div class="hero-desc" th:text="${wallet.walletDescription != null and !wallet.walletDescription.isEmpty() ? wallet.walletDescription : 'Без описания'}">Описание</div>
+            </div>
+        </div>
+
+        <div class="hero-balance-label">Текущий баланс</div>
+        <div class="hero-balance">
+            <span th:text="'$' + ${#numbers.formatDecimal(wallet.walletTotalAmount, 1, 'COMMA', 2, 'POINT')}">$0.00</span>
+            <span class="currency">USD</span>
+        </div>
+    </div>
+
+    <!-- Детали -->
+    <div class="details-card">
+        <div class="details-title">Информация о кошельке</div>
+
+        <div class="detail-row">
+            <span class="detail-key">ID</span>
+            <span class="detail-value mono" th:text="${wallet.id}">1</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-key">Название</span>
+            <span class="detail-value" th:text="${wallet.walletName}">Main wallet</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-key">Описание</span>
+            <span class="detail-value"
+                  th:text="${wallet.walletDescription != null and !wallet.walletDescription.isEmpty() ? wallet.walletDescription : '—'}">—</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-key">Баланс</span>
+            <span class="detail-value mono"
+                  th:text="'$' + ${#numbers.formatDecimal(wallet.walletTotalAmount, 1, 'COMMA', 2, 'POINT')} + ' USD'">$0.00 USD</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-key">Статус</span>
+            <span class="detail-value"><span class="badge">Активен</span></span>
+        </div>
+    </div>
+
+    <!-- Кнопки -->
+    <div class="actions">
+        <a href="/view/menu" class="btn btn-primary">
+            <span>← Вернуться к списку</span>
+        </a>
+        <a href="#" class="btn btn-secondary">Редактировать</a>
+        <button type="button" class="btn btn-danger" id="deleteWalletBtn">
+            <span>Удалить кошелёк</span>
+        </button>
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения удаления -->
+<div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="modal">
+        <div class="modal-icon">⚠</div>
+        <h3 id="deleteModalTitle">Удалить кошелёк?</h3>
+        <p>
+            Вы собираетесь удалить кошелёк
+            <strong th:text="${wallet.walletName}">—</strong>.
+            Это действие необратимо. Все данные кошелька будут потеряны.
+        </p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Отмена</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Да, удалить</button>
+        </div>
+        <div class="modal-error" id="deleteError"></div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /* ============================================================
+       Параллакс blob'ов
+       ============================================================ */
+    const blobs = document.querySelectorAll('.blob');
+    let mx = 0, my = 0, cx = 0, cy = 0;
+    window.addEventListener('mousemove', (e) => {
+        mx = (e.clientX / window.innerWidth - 0.5) * 2;
+        my = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+    (function animate() {
+        cx += (mx - cx) * 0.05;
+        cy += (my - cy) * 0.05;
+        blobs.forEach((b, i) => {
+            const d = (i + 1) * 6;
+            b.style.marginLeft = `${cx * d}px`;
+            b.style.marginTop = `${cy * d}px`;
+        });
+        requestAnimationFrame(animate);
+    })();
+
+    /* ============================================================
+       Удаление кошелька
+       ============================================================ */
+    (function () {
+        // Thymeleaf подставит сюда реальный ID кошелька
+        const walletId = /*[[${wallet.id}]]*/ null;
+
+        const openBtn    = document.getElementById('deleteWalletBtn');
+        const modal      = document.getElementById('deleteModal');
+        const cancelBtn  = document.getElementById('cancelDeleteBtn');
+        const confirmBtn = document.getElementById('confirmDeleteBtn');
+        const errorBox   = document.getElementById('deleteError');
+
+        function openModal() {
+            errorBox.classList.remove('show');
+            errorBox.textContent = '';
+            confirmBtn.disabled = false;
+            cancelBtn.disabled  = false;
+            confirmBtn.textContent = 'Да, удалить';
+            modal.classList.add('open');
+        }
+
+        function closeModal() {
+            modal.classList.remove('open');
+        }
+
+        openBtn.addEventListener('click', openModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        // Закрытие по клику вне окна и по Esc
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+        });
+
+        confirmBtn.addEventListener('click', async () => {
+            if (walletId === null || walletId === undefined) {
+                errorBox.textContent = 'Не удалось определить ID кошелька.';
+                errorBox.classList.add('show');
+                return;
+            }
+
+            confirmBtn.disabled = true;
+            cancelBtn.disabled  = true;
+            confirmBtn.textContent = 'Удаляем…';
+
+            try {
+                const response = await fetch(`/wallet/${walletId}`, {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json, text/plain, */*' }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status} ${response.statusText}`);
+                }
+
+                // Успех — возвращаемся к списку кошельков
+                window.location.href = '/view/menu';
+            } catch (err) {
+                console.error('Ошибка удаления кошелька:', err);
+                errorBox.textContent = `Не удалось удалить кошелёк: ${err.message}`;
+                errorBox.classList.add('show');
+                confirmBtn.disabled = false;
+                cancelBtn.disabled  = false;
+                confirmBtn.textContent = 'Да, удалить';
+            }
+        });
+    })();
+</script>
+</body>
+</html>
